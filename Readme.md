@@ -20,7 +20,16 @@ Follow these steps to deploy the EFK stack:
    cd efk-deployment
 
 2. **Deploy the EFK Stack**
+   for linux and mac:
    ```bash
    ./scripts/setup.sh
-**Access Kibana**
+
+   for windows:
+   ```ps1
+   ./scripts/setup.ps1
+
+
+   
+   For Accessing kibana:
+   ```bash
    kubectl port-forward svc/kibana 5601:5601
