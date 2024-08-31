@@ -18,3 +18,9 @@ Follow these steps to deploy the EFK stack:
    ```bash
    git clone https://github.com/faisalkamilansari/efk-deployment.git
    cd efk-deployment
+
+2. **Deploy the EFK Stack**
+   ```bash
+   ./scripts/setup.sh
+**Access Kibana**
+   kubectl port-forward svc/kibana 5601:5601
