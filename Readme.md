@@ -18,18 +18,26 @@ Follow these steps to deploy the EFK stack:
    ```bash
    git clone https://github.com/faisalkamilansari/efk-deployment.git
    cd efk-deployment
+   ```
 
 2. **Deploy the EFK Stack**
-   \nfor linux and mac:
    ```bash
    ./scripts/setup.sh
+   ```
 
-   for windows:
-   ```ps1
-   ./scripts/setup.ps1
+3. **Access Kibana**
+   - You can port-forward to access Kibana locally:
+     ```bash
+     kubectl port-forward svc/kibana 5601:5601
+     ```
+   - Open `http://localhost:5601` in your browser.
 
+## Customization
 
-   
-   For Accessing kibana:
-   ```bash
-   kubectl port-forward svc/kibana 5601:5601
+- **Fluentd Configuration:** Modify `charts/fluentd/values.yaml` to update Fluentd settings.
+- **Elasticsearch Configuration:** Adjust `deployments/elasticsearch/elasticsearch-deployment.yaml` if needed.
+- **Kibana Configuration:** Update `deployments/kibana/kibana-deployment.yaml` for Kibana settings.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
