@@ -1,0 +1,4 @@
+apiVersion: v2
+name: fluentd
+description: A Helm chart for Fluentd
+version: 0.1.0
