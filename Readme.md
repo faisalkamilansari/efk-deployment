@@ -22,6 +22,7 @@ Follow these steps to deploy the EFK stack:
 
 2. **Deploy the EFK Stack**
    ```bash
+   sudo chmod +x ./scripts/setup.sh
    ./scripts/setup.sh
    ```
 
