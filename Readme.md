@@ -20,7 +20,7 @@ Follow these steps to deploy the EFK stack:
    cd efk-deployment
 
 2. **Deploy the EFK Stack**
-   for linux and mac:
+   \nfor linux and mac:
    ```bash
    ./scripts/setup.sh
 
