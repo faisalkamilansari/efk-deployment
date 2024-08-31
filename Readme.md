@@ -39,6 +39,3 @@ Follow these steps to deploy the EFK stack:
 - **Elasticsearch Configuration:** Adjust `deployments/elasticsearch/elasticsearch-deployment.yaml` if needed.
 - **Kibana Configuration:** Update `deployments/kibana/kibana-deployment.yaml` for Kibana settings.
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
