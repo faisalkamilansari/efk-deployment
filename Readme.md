@@ -29,7 +29,7 @@ Follow these steps to deploy the EFK stack:
 3. **Access Kibana**
    - You can port-forward to access Kibana locally:
      ```bash
-     kubectl port-forward svc/kibana 5601:5601
+     kubectl port-forward svc/quickstart-kb-http 5601:5601
      ```
    - Open `http://localhost:5601` in your browser.
 
