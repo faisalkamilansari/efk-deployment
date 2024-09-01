@@ -12,6 +12,8 @@ kubectl apply -f deployments/fluentd/configmap.yaml
 # Apply Fluentd Daemonset
 kubectl apply -f deployments/fluentd/daemonset.yaml
 
+sudo fluent-gem install fluent-plugin-kubernetes_metadata_filter
+
 # Apply Elasticsearch Service
 kubectl apply -f deployments/elasticsearch/elasticsearch-service.yaml
 
