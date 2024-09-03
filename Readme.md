@@ -1,41 +1,162 @@
-# EFK Stack Deployment on Manual Kubernetes Cluster
+# k8s-fluentd
+Kubernetes logging mechanism using EFK (Elastic search, Kibana and Fluentd)
 
-This repository contains the configuration for deploying an EFK (Elasticsearch, Fluentd, Kibana) stack on a manually created Kubernetes cluster.
+#### Prerequisites
 
-## Repository Structure
+- Docker setup: https://docs.docker.com/engine/install/
+- Kubectl installation: https://kubernetes.io/docs/tasks/tools/
+- Minikube setup : https://minikube.sigs.k8s.io/docs/start/
+- helm setup  - https://helm.sh/docs/intro/install/
 
-- `charts/` - Contains Helm charts for deploying Fluentd, Kibana, and Elasticsearch.
-- `deployments/` - Kubernetes manifests for deploying Elasticsearch, Fluentd, and Kibana.
-- `scripts/` - Contains setup scripts to apply Kubernetes configurations.
-- `README.md` - This file.
-- `values.yaml` - Configuration values for Helm charts.
+- Yaml script basics
+- kubernetes basics 
+- Helm basics
 
-## Getting Started
+```
+docker version
 
-Follow these steps to deploy the EFK stack:
+kubectl version
 
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/faisalkamilansari/efk-deployment.git
-   cd efk-deployment
-   ```
+minikube version
 
-2. **Deploy the EFK Stack**
-   ```bash
-   sudo chmod +x ./scripts/setup.sh
-   ./scripts/setup.sh
-   ```
+helm version
 
-3. **Access Kibana**
-   - You can port-forward to access Kibana locally:
-     ```bash
-     kubectl port-forward svc/quickstart-kb-http 5601:5601
-     ```
-   - Open `http://localhost:5601` in your browser.
+minikube start
+```
 
-## Customization
+### Implementation
 
-- **Fluentd Configuration:** Modify `charts/fluentd/values.yaml` to update Fluentd settings.
-- **Elasticsearch Configuration:** Adjust `deployments/elasticsearch/elasticsearch-deployment.yaml` if needed.
-- **Kibana Configuration:** Update `deployments/kibana/kibana-deployment.yaml` for Kibana settings.
+**Step 1: Create Namespace**
+
+```
+kubectl create namespace efk-monitoring
+
+```
+**Step 2: Add Elastic Helm Repository**
+
+```
+helm repo add elastic https://helm.elastic.co
+helm repo update
+
+```
+
+**Step 3: Install Elasticsearch**
+
+```
+helm install elasticsearch elastic/elasticsearch --version 7.17.3 -n efk-monitoring --set replicas=1
+
+```
+
+**Step 4: Install Elasticsearch with Persistence Disabled**
+
+If you want to disable persistence for Elasticsearch (Note: This is suitable for testing purposes only):
+
+```
+helm install elasticsearch elastic/elasticsearch --version 7.17.3 -n efk-monitoring --set persistence.enabled=false,replicas=1
+
+```
+
+**Step 5: Check the Installation**
+
+```
+helm list -n efk-monitoring
+kubectl get pods -n efk-monitoring
+kubectl get svc -n efk-monitoring
+
+```
+
+**Step 6: Install Kibana**
+
+```
+helm install kibana elastic/kibana --version 7.17.3 -n efk-monitoring
+```
+
+**Step 7: Verify Kibana Installation**
+
+```
+kubectl get pods -n efk-monitoring
+```
+
+
+**Step 8: Apply Fluentd Configuration**
+
+Apply the Fluentd ConfigMap and DaemonSet YAML files:
+
+```
+kubectl apply -f ./fluentd-configmap.yaml
+kubectl apply -f ./fluentd-rbac.yaml
+
+```
+
+
+**Step 9: Monitor Fluentd DaemonSet**
+
+Monitor the Fluentd DaemonSet to ensure successful deployment:
+
+```
+kubectl get pods -n kube-system -w
+
+```
+
+**Step 10: Add Dapr Helm Repository** (Optional)
+
+```
+helm repo add dapr https://dapr.github.io/helm-charts/
+helm repo update
+```
+
+
+**Step 11: Install Dapr** (Optional)
+Install Dapr with JSON formatted logs enabled:
+
+```
+helm install dapr dapr/dapr --namespace efk-monitoring --set global.logAsJson=true
+
+```
+
+
+**Step 12: Port Forward Kibana**
+
+To access Kibana web interface:
+
+```
+kubectl port-forward svc/kibana-kibana 5601 -n efk-monitoring
+
+```
+
+**Step13: Deploy the sample application**
+
+```
+kubectl apply -f k8s-app.yml
+
+kubectl get pods
+
+kubectl get svc
+
+kubectl logs <pod-name>
+
+kubectl port-forward svc/myapp 8080
+
+```
+
+
+### Delete all the resources
+
+
+```
+kubectl delete -f k8s-app.yml
+
+kubectl delete -f fluentd-config-map.yaml
+
+kubectl delete -f fluentd-rbac.yaml
+
+helm list -n efk-monitoring
+
+helm uninstall elasticsearch -n efk-monitoring
+
+helm uninstall kibana -n efk-monitoring
+
+```
+
+
 
